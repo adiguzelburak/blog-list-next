@@ -40,8 +40,8 @@ export default function Home({ postInfo }: Props) {
 
 
 export async function getServerSideProps() {
-  const response = await fetch('https://dummyjson.com/posts');
-  const postInfo = await response.json();
+  const responseDetail = await fetch('https://dummyjson.com/posts');
+  const postInfo = await responseDetail.json();
 
   return {
     props: {
