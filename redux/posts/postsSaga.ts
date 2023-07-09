@@ -1,16 +1,17 @@
-import {
-    all, call, put, takeLatest
-} from "redux-saga/effects";
+import { all, call, debounce, put, takeLatest } from "redux-saga/effects";
 import postService from "./postsService";
 import { postActions } from "./postsSlice";
+import { PayloadAction } from "@reduxjs/toolkit";
+import { AxiosResponseType } from "../../utilities/types";
 
-function* getPostListSaga() {
+function* getPostsBySearchedSaga(action: PayloadAction<string>) {
     try {
-        const { status, statusText, data } = yield call(postService.getPostList)
-        if (status !== 200) throw new Error(statusText)
+        if (action.payload) {
+            const { status, statusText, data }: AxiosResponseType = yield call(postService.getPostsBySearched, action.payload)
+            if (status !== 200) throw new Error(statusText)
 
-        yield put(postActions.setPostList(data));
-
+            yield put(postActions.setPostListBySearch(data));
+        }
     } catch (e) {
         console.log(e)
     }
@@ -19,7 +20,6 @@ function* getPostListSaga() {
 
 export default function* rootSaga() {
     yield all([
-        takeLatest(postActions.getPostListRequest.type, getPostListSaga),
-        // takeLatest(pokemonActions.getPokemonByIdRequest.type, getPokemonByIdSaga),
+        debounce(600, postActions.getPostsBySearchedRequest.type, getPostsBySearchedSaga),
     ]);
 }

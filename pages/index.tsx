@@ -1,9 +1,10 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { postActions } from '../redux/posts/postsSlice';
-import { PostInfoType } from '../utilities/types';
+import { PostInfoType, PostType, SelectorType } from '../utilities/types';
+import axios from 'axios';
 
 type Props = {
   postInfo: PostInfoType;
@@ -12,12 +13,32 @@ type Props = {
 
 export default function Home({ postInfo }: Props) {
   const dispatch = useDispatch();
-  const posts = useSelector(state => state.post.posts)
+  const [isSearched, setIsSearched] = useState(false)
+  const [searchedTitle, setSearchedTitle] = useState('')
+  const posts = useSelector<SelectorType, PostType[]>(state => state.post.posts)
+  const searched = useSelector<SelectorType, PostInfoType | null>(state => state.post.searchedPosts)
+
   useEffect(() => {
     dispatch(postActions.setPostList(postInfo.posts))
   }, [])
 
-  console.log(posts)
+  const searchPost = (postTitle: string) => {
+    dispatch(postActions.getPostsBySearchedRequest(postTitle))
+  }
+
+  useEffect(() => {
+    if (searchedTitle !== "") {
+      setIsSearched(true)
+    } else {
+      setIsSearched(false);
+
+    }
+  }, [searchedTitle])
+
+  const onChange = (e: any) => {
+    searchPost(e.target.value)
+    setSearchedTitle(e.target.value)
+  }
 
   return (
     <>
@@ -29,11 +50,20 @@ export default function Home({ postInfo }: Props) {
       </Head>
       <div>
         <h1>Blog List</h1>
+        <input
+          onChange={onChange}
+          placeholder='Please enter a Post Name' />
 
         <ul>
-          {postInfo.posts.map(((post, index) => <li key={index}>
-            <Link href={`/posts/${post.id}`}>{post.title}</Link>
-          </li>))}
+          {isSearched
+            ? <>
+              {searched?.posts?.map(((post: PostType) => <li key={post.id}>
+                <Link href={`/posts/${post.id}`}>{post.title}</Link>
+              </li>))}</>
+            : <>
+              {posts.map(((post: PostType) => <li key={post.id}>
+                <Link href={`/posts/${post.id}`}>{post.title}</Link>
+              </li>))}</>}
         </ul>
       </div >
     </>

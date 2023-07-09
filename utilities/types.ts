@@ -1,3 +1,5 @@
+import { PostStateType } from "../redux/posts/postsSlice";
+
 export type PostInfoType = {
   limit: number;
   posts: PostType[]
@@ -20,8 +22,8 @@ export type PostType = {
   title: string,
   userId: number;
   comments?: CommentType[];
-  author: AuthorType;
-  isSeen: boolean;
+  author?: AuthorType;
+  isSeen?: boolean;
 }
 
 export type CommentType = {
@@ -34,7 +36,6 @@ export type CommentType = {
   }
 }
 
-
 export type AuthorType = {
   firstName: string,
   lastName: string,
@@ -45,10 +46,12 @@ export type AuthorType = {
   age: number,
 }
 
-
-
 export type SelectorType = {
-  post: {
-    postList: PostType[]
-  }
+  post: PostStateType
+}
+
+export type AxiosResponseType = {
+  status: number,
+  statusText: string,
+  data: PostInfoType
 }

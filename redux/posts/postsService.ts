@@ -1,15 +1,9 @@
 import axios from "axios";
 
-const URL = 'https://dummyjson.com/posts';
-
 const postService = {
-    getPostList: () => {
-        return axios.get(URL, {
-        })
-    },
-    // getPostDetailById: (id) => {
-    //     return axios.get(`${URL}/${id}/`)
-    // }
+    getPostsBySearched: (postTitle: string) => {
+        return axios.get(`https://dummyjson.com/posts/search?q=${postTitle}`)
+    }
 };
 
 export default postService;

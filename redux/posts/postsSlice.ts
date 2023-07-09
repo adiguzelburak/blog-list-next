@@ -1,13 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { PostInfoType, PostType } from "../../utilities/types";
 
-type StateType = {
+export type PostStateType = {
     posts: PostType[],
+    searchedPosts: PostInfoType | null,
 }
 
 // Initial state
-const initialState: StateType = {
+const initialState: PostStateType = {
     posts: [],
+    searchedPosts: null,
 };
 
 export const postsSlice = createSlice({
@@ -15,10 +17,15 @@ export const postsSlice = createSlice({
     initialState,
     reducers: {
         getPostListRequest() { },
+        getPostsBySearchedRequest(state, action: { payload: string }) { },
 
         setPostList(state, action: { payload: PostType[] }) {
             const prevPostIds = state.posts.map(post => post.id)
             state.posts = [...state.posts, ...action.payload.filter(post => !prevPostIds.includes(post.id))]
+        },
+
+        setPostListBySearch(state, action: { payload: PostInfoType }) {
+            state.searchedPosts = action.payload;
         },
 
         setPostDetailList(state, action: { payload: PostType }) {
