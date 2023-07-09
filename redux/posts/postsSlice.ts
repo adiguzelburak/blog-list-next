@@ -17,7 +17,8 @@ export const postsSlice = createSlice({
         getPostListRequest() { },
 
         setPostList(state, action: { payload: PostType[] }) {
-            state.posts = action.payload
+            const prevPostIds = state.posts.map(post => post.id)
+            state.posts = [...state.posts, ...action.payload.filter(post => !prevPostIds.includes(post.id))]
         },
 
         setPostDetailList(state, action: { payload: PostType }) {
@@ -27,8 +28,6 @@ export const postsSlice = createSlice({
                 state.posts.push(action.payload)
             }
         },
-
-
     },
 });
 

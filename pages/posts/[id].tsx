@@ -14,7 +14,7 @@ export default function PostDetail({ postDetail, postComments, postAuthorDetail 
     const commentsList = postComments.comments;
 
     useEffect(() => {
-        dispatch(postActions.setPostDetailList({ ...postDetail, comments: commentsList, author: postAuthorDetail }));
+        dispatch(postActions.setPostDetailList({ ...postDetail, comments: commentsList, author: postAuthorDetail, isSeen: true }));
     }, [])
 
     return (

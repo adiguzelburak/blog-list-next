@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { postActions } from '../redux/posts/postsSlice';
 import { PostInfoType } from '../utilities/types';
 
@@ -12,10 +12,12 @@ type Props = {
 
 export default function Home({ postInfo }: Props) {
   const dispatch = useDispatch();
-
+  const posts = useSelector(state => state.post.posts)
   useEffect(() => {
     dispatch(postActions.setPostList(postInfo.posts))
   }, [])
+
+  console.log(posts)
 
   return (
     <>

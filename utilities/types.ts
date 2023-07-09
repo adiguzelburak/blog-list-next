@@ -21,6 +21,7 @@ export type PostType = {
   userId: number;
   comments?: CommentType[];
   author: AuthorType;
+  isSeen: boolean;
 }
 
 export type CommentType = {
@@ -43,6 +44,7 @@ export type AuthorType = {
   email: string,
   age: number,
 }
+
 
 
 export type SelectorType = {
