@@ -1,11 +1,22 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from '../styles/Home.module.css'
+import Head from 'next/head';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { postActions } from '../redux/posts/postsSlice';
+import { PostInfoType } from '../utilities/types';
 
-const inter = Inter({ subsets: ['latin'] })
+type Props = {
+  postInfo: PostInfoType;
+}
 
-export default function Home() {
+
+export default function Home({ postInfo }: Props) {
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(postActions.setPostList(postInfo.posts))
+  }, [])
+
   return (
     <>
       <Head>
@@ -15,8 +26,24 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        Home Page
-      </div>
+        <h1>Blog List</h1>
+
+        <ul>
+          {postInfo.posts.map(((post, index) => <li key={index} onClick={() => console.log(post.id)}>{post.title}</li>))}
+        </ul>
+      </div >
     </>
   )
+}
+
+
+export async function getServerSideProps() {
+  const response = await fetch('https://dummyjson.com/posts');
+  const postInfo = await response.json();
+
+  return {
+    props: {
+      postInfo,
+    },
+  };
 }
