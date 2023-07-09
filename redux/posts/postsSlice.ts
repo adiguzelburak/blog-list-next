@@ -1,14 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { PostType } from "../../utilities/types";
+import { PostInfoType, PostType } from "../../utilities/types";
 
 type StateType = {
-    posts: PostType[]
+    posts: PostType[],
 }
 
 // Initial state
 const initialState: StateType = {
     posts: [],
-    // postDetailList: {},
 };
 
 export const postsSlice = createSlice({
@@ -18,8 +17,17 @@ export const postsSlice = createSlice({
         getPostListRequest() { },
 
         setPostList(state, action: { payload: PostType[] }) {
-            state.posts = [...state.posts, ...action.payload]
+            state.posts = action.payload
         },
+
+        setPostDetailList(state, action: { payload: PostType }) {
+            if (state.posts.length > 0) {
+                state.posts = state.posts.map(post => post.id === action.payload.id ? action.payload : post)
+            } else {
+                state.posts.push(action.payload)
+            }
+        },
+
 
     },
 });

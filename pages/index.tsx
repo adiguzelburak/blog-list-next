@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Link from 'next/link';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { postActions } from '../redux/posts/postsSlice';
@@ -10,7 +11,6 @@ type Props = {
 
 
 export default function Home({ postInfo }: Props) {
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -29,7 +29,9 @@ export default function Home({ postInfo }: Props) {
         <h1>Blog List</h1>
 
         <ul>
-          {postInfo.posts.map(((post, index) => <li key={index} onClick={() => console.log(post.id)}>{post.title}</li>))}
+          {postInfo.posts.map(((post, index) => <li key={index}>
+            <Link href={`/posts/${post.id}`}>{post.title}</Link>
+          </li>))}
         </ul>
       </div >
     </>
