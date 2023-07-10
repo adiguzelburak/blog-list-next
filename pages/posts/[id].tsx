@@ -5,6 +5,7 @@ import { AuthorType, CommentInfoType, PostType } from "../../utilities/types";
 import { faker } from "@faker-js/faker";
 import Image from "next/image";
 import classNames from "../../helpers/classNames";
+import Link from "next/link";
 
 type Props = {
     postDetail: PostType;
@@ -33,17 +34,24 @@ export default function PostDetail({ postDetail, postComments, postAuthorDetail 
     return (
         <>
             <div className="max-w-7xl mx-auto px-6 lg:px-0">
-                <h2 className="mt-10 text-2xl tracking-tight font-extrabold text-gray-900 sm:text-5xl text-center lg:text-left">{postDetail.title}</h2>
+                <Link href='/' className="flex items-center mt-4 lg:mt-10 border w-fit px-4 py-1.5 rounded-lg border-black bg-white hover:bg-gray-900 transition-colors duration-300 group">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2 text-gray-900 group-hover:text-white">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+                    </svg>
+                    <div className="tracking-tight font-extrabold text-gray-900 text-lg group-hover:text-white"> Back</div>
+                </Link>
+
+                <h2 className="mt-6 lg:mt-10 text-2xl tracking-tight font-extrabold text-gray-900 sm:text-5xl text-center lg:text-left">{postDetail.title}</h2>
                 <div className="space-x-4 mt-6 text-center lg:text-left">
                     {postDetail.tags.map((tag =>
                         <span key={tag} className="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10">
                             {tag}</span>
                     ))}
                 </div>
-                <div className="flex flex-col-reverse lg:flex-row justify-between mt-10 text-center lg:text-left">
+                <div className="flex flex-col-reverse lg:flex-row justify-between mt-6 lg:mt-10 text-center lg:text-left">
                     <div className="text-gray-500 w-full lg:w-5/6 text-xl">
                         <Image width={1000} height={480} placeholder='blur' blurDataURL={generateFakerImage()} className="rounded-lg mb-4 h-72 w-full object-cover" src={generateFakerImage()} alt={postDetail.title} />
-                        <div>
+                        <div className="text-base lg:text-xl">
                             {postDetail.body}
                         </div>
                     </div>
@@ -63,6 +71,7 @@ export default function PostDetail({ postDetail, postComments, postAuthorDetail 
                     </div>
                 </div>
                 <div className="mt-6">
+                    <h2 className="lg:mt-10 text-2xl tracking-tight font-extrabold text-gray-900 sm:text-xl lg:border-b text-left">Comments</h2>
                     {commentsList.map((comment, index) =>
                         <div key={comment.id}>
                             <div className="flex items-center text-sm text-gray-500 space-x-4">
