@@ -44,6 +44,7 @@ export type AuthorType = {
   username: string,
   email: string,
   age: number,
+  image: string,
 }
 
 export type SelectorType = {
