@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { postActions } from '../redux/posts/postsSlice';
 import { PostInfoType, PostType, SelectorType } from '../utilities/types';
@@ -37,9 +37,20 @@ export default function Home({ postInfo }: Props) {
     }
   }, [searchedTitle])
 
-  const onChange = (e: any) => {
+  useEffect(() => {
+    if (isLoading) {
+      setIsLoading(false);
+    }
+    if (!isSearched) {
+      setIsLoading(false);
+    }
+  }, [searched, isSearched])
+
+
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     searchPost(e.target.value)
     setSearchedTitle(e.target.value)
+    setIsLoading(true);
   }
 
   const summary = (text: string) => {
@@ -51,6 +62,7 @@ export default function Home({ postInfo }: Props) {
 
   const generateFakerImage = () => {
     const randomImage = faker.image.urlPicsumPhotos();
+
     return randomImage;
   };
 
@@ -67,7 +79,7 @@ export default function Home({ postInfo }: Props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        <div className="relative bg-gray-50 pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
+        <div className="relative pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
           <div className="absolute inset-0">
             <div className="bg-white h-1/3 sm:h-2/3" />
           </div>
@@ -77,17 +89,33 @@ export default function Home({ postInfo }: Props) {
               <p className="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
                 Welcome to my Blog List
               </p>
-
+              <div>
+                <div className="mt-6 relative rounded-md shadow-sm">
+                  <input
+                    type="text"
+                    name="post-title"
+                    id="post-title"
+                    onChange={onChange}
+                    className="outline-none block w-full pl-10 pr-10 sm:text-sm border-gray-300 placeholder:italic"
+                    placeholder="Search Post Title..."
+                  />
+                  <div className="absolute inset-y-0 left-0 pr-3 flex items-center pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-5 w-5 text-gray-400">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
               {isLoading &&
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-20 h-20 animate-spin mx-auto mt-3">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                 </svg>}
 
             </div>
-            <div className="mt-12 max-w-lg mx-auto grid gap-5 lg:grid-cols-3 lg:max-w-none">
+            <div className="mt-10 max-w-lg mx-auto grid gap-5 lg:grid-cols-3 lg:max-w-none">
               {isSearched
                 ? <>
-                  {searched?.posts?.map(((post: PostType) =>
+                  {searched?.posts?.map(((post) =>
                     <Link onClick={() => showLoading()} href={`/posts/${post.id}`} key={post.id} className="flex flex-col rounded-lg shadow-lg overflow-hidden">
                       <div className="flex-shrink-0">
                         <Image width={640} height={480} placeholder='blur' blurDataURL={generateFakerImage()} className="h-48 w-full object-cover" src={generateFakerImage()} alt={post.title} />
@@ -102,7 +130,7 @@ export default function Home({ postInfo }: Props) {
                       </div>
                     </Link>))}</>
                 : <>
-                  {posts.map(((post: PostType) =>
+                  {posts.map(((post) =>
                     <Link onClick={() => showLoading()} href={`/posts/${post.id}`} key={post.id} className="flex flex-col rounded-lg shadow-lg overflow-hidden">
                       <div className="flex-shrink-0">
                         <Image width={640} height={480} placeholder='blur' blurDataURL={generateFakerImage()} className="h-48 w-full object-cover" src={generateFakerImage()} alt={post.title} />
@@ -119,9 +147,6 @@ export default function Home({ postInfo }: Props) {
             </div>
           </div>
         </div>
-        <input
-          onChange={onChange}
-          placeholder='Please enter a Post Name' />
       </div >
     </>
   )
