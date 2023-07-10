@@ -2,7 +2,7 @@
 
 This is a Next.js based project that displays a list of blogs. The blog posts are generated using data from `dummyjson`.
 
-[Live Demo]()
+[Live Demo](https://blog-list-next.vercel.app/)
 
 ## Features
 
