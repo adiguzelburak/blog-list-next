@@ -15,6 +15,7 @@ type Props = {
 export default function Home({ postInfo }: Props) {
   const dispatch = useDispatch();
   const [isSearched, setIsSearched] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [searchedTitle, setSearchedTitle] = useState('')
   const posts = useSelector<SelectorType, PostType[]>(state => state.post.posts)
   const searched = useSelector<SelectorType, PostInfoType | null>(state => state.post.searchedPosts)
@@ -53,6 +54,10 @@ export default function Home({ postInfo }: Props) {
     return randomImage;
   };
 
+  const showLoading = () => {
+    setIsLoading(true);
+  }
+
   return (
     <>
       <Head>
@@ -72,12 +77,18 @@ export default function Home({ postInfo }: Props) {
               <p className="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
                 Welcome to my Blog List
               </p>
+
+              {isLoading &&
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-20 h-20 animate-spin mx-auto mt-3">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                </svg>}
+
             </div>
             <div className="mt-12 max-w-lg mx-auto grid gap-5 lg:grid-cols-3 lg:max-w-none">
               {isSearched
                 ? <>
                   {searched?.posts?.map(((post: PostType) =>
-                    <Link href={`/posts/${post.id}`} key={post.id} className="flex flex-col rounded-lg shadow-lg overflow-hidden">
+                    <Link onClick={() => showLoading()} href={`/posts/${post.id}`} key={post.id} className="flex flex-col rounded-lg shadow-lg overflow-hidden">
                       <div className="flex-shrink-0">
                         <Image width={640} height={480} placeholder='blur' blurDataURL={generateFakerImage()} className="h-48 w-full object-cover" src={generateFakerImage()} alt={post.title} />
                       </div>
@@ -92,14 +103,14 @@ export default function Home({ postInfo }: Props) {
                     </Link>))}</>
                 : <>
                   {posts.map(((post: PostType) =>
-                    <Link href={`/posts/${post.id}`} key={post.id} className="flex flex-col rounded-lg shadow-lg overflow-hidden">
+                    <Link onClick={() => showLoading()} href={`/posts/${post.id}`} key={post.id} className="flex flex-col rounded-lg shadow-lg overflow-hidden">
                       <div className="flex-shrink-0">
                         <Image width={640} height={480} placeholder='blur' blurDataURL={generateFakerImage()} className="h-48 w-full object-cover" src={generateFakerImage()} alt={post.title} />
                       </div>
                       <div className="flex-1 bg-white p-6 flex flex-col justify-between">
                         <div className="flex-1">
                           <div className="block mt-2">
-                            <p className={classNames(post.isSeen ? "text-blue-800" : "text-gray-900","text-xl font-semibold")}>{post.title}</p>
+                            <p className={classNames(post.isSeen ? "text-blue-800 underline" : "text-gray-900", "text-xl font-semibold")}>{post.title}</p>
                             <p className="mt-3 text-base text-gray-500">{summary(post.body)}</p>
                           </div>
                         </div>
