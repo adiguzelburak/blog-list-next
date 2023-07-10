@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { postActions } from '../redux/posts/postsSlice';
 import { PostInfoType, PostType, SelectorType } from '../utilities/types';
-import axios from 'axios';
+import { faker } from '@faker-js/faker';
+import Image from 'next/image';
+import classNames from '../helpers/classNames';
 
 type Props = {
   postInfo: PostInfoType;
@@ -46,6 +48,11 @@ export default function Home({ postInfo }: Props) {
     return summaryText;
   };
 
+  const generateFakerImage = () => {
+    const randomImage = faker.image.urlPicsumPhotos();
+    return randomImage;
+  };
+
   return (
     <>
       <Head>
@@ -72,7 +79,7 @@ export default function Home({ postInfo }: Props) {
                   {searched?.posts?.map(((post: PostType) =>
                     <Link href={`/posts/${post.id}`} key={post.id} className="flex flex-col rounded-lg shadow-lg overflow-hidden">
                       <div className="flex-shrink-0">
-                        <img className="h-48 w-full object-cover" src={'https://loremflickr.com/640/480/abstract'} alt="ds" />
+                        <Image width={640} height={480} placeholder='blur' blurDataURL={generateFakerImage()} className="h-48 w-full object-cover" src={generateFakerImage()} alt={post.title} />
                       </div>
                       <div className="flex-1 bg-white p-6 flex flex-col justify-between">
                         <div className="flex-1">
@@ -87,12 +94,12 @@ export default function Home({ postInfo }: Props) {
                   {posts.map(((post: PostType) =>
                     <Link href={`/posts/${post.id}`} key={post.id} className="flex flex-col rounded-lg shadow-lg overflow-hidden">
                       <div className="flex-shrink-0">
-                        <img className="h-48 w-full object-cover" src={'https://loremflickr.com/640/480/abstract'} alt="ds" />
+                        <Image width={640} height={480} placeholder='blur' blurDataURL={generateFakerImage()} className="h-48 w-full object-cover" src={generateFakerImage()} alt={post.title} />
                       </div>
                       <div className="flex-1 bg-white p-6 flex flex-col justify-between">
                         <div className="flex-1">
                           <div className="block mt-2">
-                            <p className="text-xl font-semibold text-gray-900">{post.title}</p>
+                            <p className={classNames(post.isSeen ? "text-blue-800" : "text-gray-900","text-xl font-semibold")}>{post.title}</p>
                             <p className="mt-3 text-base text-gray-500">{summary(post.body)}</p>
                           </div>
                         </div>
